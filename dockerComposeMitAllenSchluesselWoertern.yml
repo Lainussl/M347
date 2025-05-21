@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  mariadb: # Service Name
+    image: mariadb:latest # Ausgewähltes Image
+    container_name: mariadb_container # Container Name
+    restart: unless-stopped # always, on-failure oder unless-stopped
+    environment: #Environment Variables
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mariadb_root_password
+      - MYSQL_DATABASE=meine_datenbank
+      - MYSQL_USER=benutzername
+      - MYSQL_PASSWORD_FILE=/run/secrets/mariadb_user_password
+    volumes: # volumes
+      - mariadb_data:/var/lib/mysql
+    ports: # ports
+      - "3306:3306"
+    expose: # ports für die kommunikation zwischen Containern
+      - "3306"
+    networks: # Verweis auf ein im Top-Level-Schlüsselwort networks definiertes Netzwerk
+      - backend_net
+    secrets: # Verweis auf die im Top-Level-Schlüsselwort secrets definierte Passwortdatei
+      - mariadb_root_password
+      - mariadb_user_password
+
+networks: # Hier wird das Network definiert
+  backend_net: # netzwerk name
+    driver: bridge # host, bridge, overlay macvlan oder none
+
+volumes:
+  mariadb_data: #volumname
+
+secrets: # hier werden secrets definiet mit Filepaths
+  mariadb_root_password:
+    file: ./secrets/root_password.txt
+  mariadb_user_password:
+    file: ./secrets/user_password.txt

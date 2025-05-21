@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  service_name:
+    build:
+      context: . # hier wird der Dateipfad angegeben
+      dockerfile: Dockerfile # nur notwendig, falls das Dockefile anders heisst
+    ports:
+      - "8080:80"
+    volumes:
+      - xyz:/app
+    environment:
+      - NODE_ENV=production

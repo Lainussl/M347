@@ -1,0 +1,21 @@
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    networks:
+      - webnet
+      - appnet  # Jetzt hat web Zugriff auf app
+
+  app:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    command: node server.js
+    networks:
+      - appnet
+
+networks:
+  webnet:
+  appnet:
